@@ -31,12 +31,12 @@ services:
       - DEBUG=false
       - DOCKER_HOST=tcp://socket-proxy:2375
     volumes:
-      - /var/lib/casaos_data/portracker/portracker-data:/data
+      - ${DATA_DIR:-/var/lib/casaos_data}/portracker/portracker-data:/data
     ports:
-      - "4999:4999"
+      - "${WEB_PORT:-4999}:4999"
     restart: unless-stopped
 
-# Parsed by ZimaOS/CasaOS so it shows in the Apps UI (no icon to avoid URL quirks)
+# ZimaOS/CasaOS UI metadata (no icon to avoid URL quirks)
 x-casaos:
   architectures: [amd64, arm64]
   main: portracker

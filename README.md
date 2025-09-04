@@ -34,6 +34,12 @@ cd /var/lib/casaos_data/portracker
 curl -fsSL https://raw.githubusercontent.com/Jacko88888/portracker-zimaos/main/docker-compose.yml -o docker-compose.yml
 docker compose up -d
 Web UI: http://<your-ip>:4999
+### If the port is busy or you run a second box
+- **UI**: after importing the compose, change **Host Port** from `4999` to any free port (e.g., `4998`) before clicking Install.
+- **CLI**: run with a custom port:
+  ```bash
+  WEB_PORT=4998 docker compose up -d
+
 
 Data path: /var/lib/casaos_data/portracker/portracker-data
 

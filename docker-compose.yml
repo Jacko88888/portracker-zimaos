@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:latest
+    container_name: portracker-socket-proxy
+    environment:
+      - CONTAINERS=1
+      - EVENTS=1
+      - PING=1
+      - VERSION=1
+      - INFO=1
+      - IMAGES=1
+      - POST=0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/run"]
+
+  portracker:
+    image: mostafawahied/portracker:latest
+    container_name: portracker
+    depends_on: [socket-proxy]
+    environment:
+      - DATABASE_PATH=/data/portracker.db
+      - PORT=4999
+      - CACHE_TIMEOUT_MS=60000
+      - DISABLE_CACHE=false
+      - INCLUDE_UDP=false
+      - DEBUG=false
+      - DOCKER_HOST=tcp://socket-proxy:2375
+    volumes:
+      - /var/lib/casaos_data/portracker/portracker-data:/data
+    ports:
+      - "4999:4999"
+    restart: unless-stopped
+
+# Parsed by ZimaOS/CasaOS so it shows in the Apps UI (no icon to avoid URL quirks)
+x-casaos:
+  architectures: [amd64, arm64]
+  main: portracker
+  author: "George (Jacko88888)"
+  category: "Network"
+  description:
+    en_us: "Discover and track open ports on your Docker host via a safe read-only Docker socket proxy."
+  developer: "Portracker"
+  tagline:
+    en_us: "Port discovery for Docker hosts"
+  title:
+    en_us: "Portracker"
+  scheme: http
+  index: /
+  port_map: {"4999": "4999"}
